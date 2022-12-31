@@ -120,6 +120,12 @@ public class TransactionService {
 
         //for the given transaction calculate the fine amount considering the book has been returned exactly when this function is called
 
+        Date currentDate = new Date();
+        Date issueDate = transaction.getTransactionDate();
+        int diff = (int) (currentDate.getTime() - issueDate.getTime());
+        int daysKept = (diff / (1000 * 60 * 60 * 24));
+
+        int fineAmount = (daysKept - getMax_allowed_days) * fine_per_day;
 
 
 
@@ -141,6 +147,7 @@ public class TransactionService {
                 .isIssueOperation(true)
                 .transactionDate(new Date())
                 .transactionStatus(TransactionStatus.SUCCESSFUL)
+                .fineAmount(fineAmount)
                 .build();
 
         List<Transaction> transactionsList = book.getTransactions();
