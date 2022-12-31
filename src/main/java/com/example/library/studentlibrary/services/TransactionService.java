@@ -119,13 +119,22 @@ public class TransactionService {
         Transaction transaction = transactions.get(transactions.size() - 1);
 
         //for the given transaction calculate the fine amount considering the book has been returned exactly when this function is called
-        //make the book available for other users
-        //make a new transaction for return book which contains the fine amount as well
 
+
+
+
+        //make the book available for other users
         Book book = bookRepository5.findById(bookId).get();
         Card card = cardRepository5.findById(cardId).get();
 
+        List<Book> bookList = card.getBooks();
 
+        bookList.remove(book);
+        card.setBooks(bookList);
+        book.setAvailable(true);
+        book.setCard(null);
+
+        //make a new transaction for return book which contains the fine amount as well
         Transaction returnBookTransaction  = Transaction.builder()
                 .book(book)
                 .card(card)
