@@ -1,5 +1,6 @@
 package com.example.library.studentlibrary.services;
 
+import com.example.library.studentlibrary.models.Author;
 import com.example.library.studentlibrary.models.Book;
 import com.example.library.studentlibrary.models.Genre;
 import com.example.library.studentlibrary.repositories.BookRepository;
@@ -17,11 +18,22 @@ public class BookService {
     BookRepository bookRepository2;
 
     public void createBook(Book book){
+        Author author = book.getAuthor();
+        author.getBooksWritten().add(book);
         bookRepository2.save(book);
     }
 
     public List<Book> getBooks(String genre, boolean available, String author){
-        List<Book> books = bookRepository2.findBooksByGenreAuthor(genre, author, available); //find the elements of the list by yourself
+        List<Book> books = new ArrayList<>(); //find the elements of the list by yourself
+        if(genre != null && author != null){
+            books = bookRepository2.findBooksByGenreAuthor(genre, author, available);
+        } else if (author != null) {
+            books = bookRepository2.findBooksByAuthor(author,available);
+        } else if (genre != null) {
+            books = bookRepository2.findBooksByGenre(genre, available);
+        }else{
+            books = bookRepository2.findByAvailability(available);
+        }
         return books;
     }
 }

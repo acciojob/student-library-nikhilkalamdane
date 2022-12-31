@@ -20,7 +20,6 @@ public class StudentService {
 
     public Student getDetailsByEmail(String email){
         Student student = studentRepository4.findByEmailId(email);
-
         return student;
     }
 
@@ -39,6 +38,7 @@ public class StudentService {
 
     public void deleteStudent(int id){
         //Delete student and deactivate corresponding card
+        cardService4.deactivateCard(id);
         studentRepository4.deleteCustom(id);
     }
 }
